@@ -98,10 +98,10 @@ defmodule Mix.Tasks.Boilex.Release do
     |> Enum.flat_map(fn remote ->
       {url, 0} = System.cmd("git", ["remote", "get-url", remote])
 
-      ~r/github\.com.*\/(.+)\/(.+)\.git/
+      ~r/github\.com.*(\/|\:)(.+)\/(.+)\.git/
       |> Regex.run(url)
       |> case do
-        [_, x, y] -> [{x, y}]
+        [_, _, x, y] -> [{x, y}]
         nil -> []
       end
     end)
