@@ -1,5 +1,4 @@
 defmodule Boilex do
-
   @moduledoc """
   Some compile-time executed code
   1) Fetching submodules.
@@ -12,14 +11,16 @@ defmodule Boilex do
   git_hooks_path = Path.join(project_top_path, ".git/hooks") |> Path.expand()
 
   git_hooks_path
-  |> File.exists?
+  |> File.exists?()
   |> case do
     true ->
-      {_, 0} = System.cmd("git", ["submodule", "update", "--init", "--recursive"], [cd: project_top_path])
+      {_, 0} = System.cmd("git", ["submodule", "update", "--init", "--recursive"], cd: project_top_path)
       pre_commit_hook_path = Path.join(git_hooks_path, "pre-commit")
+
       project_top_path
       |> Path.join("scripts/pre-commit.sh")
       |> Boilex.Utils.create_symlink(pre_commit_hook_path)
+
     false ->
       """
 
@@ -30,6 +31,6 @@ defmodule Boilex do
       ************************************************
 
       """
-      |> raise
+      |> Mix.shell().error()
   end
 end
